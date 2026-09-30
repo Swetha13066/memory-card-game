@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Butterfly Colouring</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+    text-align: center;
+    background: linear-gradient(#9be7ff, #fff4c4);
+    padding: 20px;
+}
+
+h1 {
+    color: #a0df0c;
+    margin-bottom: 8px;
+    font-size: 34px;
+}
+
+.subtitle {
+    color: #555;
+    margin-bottom: 18px;
+}
+
+/* Colour palette */
+
+.palette {
+    width: 95%;
+    max-width: 700px;
+    margin: auto;
+    background: white;
+    padding: 15px;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+.palette h2 {
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.colors {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.color {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 2px 6px #777;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.color:hover {
+    transform: scale(1.15);
+}
+
+.pink { background: #ff4fa3; }
+.red { background: #ff3333; }
+.orange { background: #ff8c00; }
+.yellow { background: #ffd900; }
+.green { background: #36b84a; }
+.lightgreen { background: #8bc34a; }
+.blue { background: #2196f3; }
+.skyblue { background: #00bcd4; }
+.purple { background: #9c27b0; }
+.violet { background: #673ab7; }
+.darkblue { background: #303f9f; }
+.brown { background: #8b4513; }
+.black { background: #222; }
+.white { background: white; }
+.gold { background: #d4af37; }
+
+/* Selected colour */
+
+.selected {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+/* Butterfly area */
+
+.canvas {
+    width: 95%;
+    max-width: 850px;
+    margin: 25px auto;
+    background: rgba(255,255,255,0.7);
+    border-radius: 25px;
+    padding: 15px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.12);
+}
+
+/* SVG */
+
+svg {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+}
+
+.part {
+    fill: white;
+    stroke: #222;
+    stroke-width: 4;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.part:hover {
+    opacity: 0.75;
+    stroke-width: 6;
+}
+
+.body {
+    fill: #222;
+    stroke: #111;
+    stroke-width: 4;
+}
+
+.eye {
+    fill: white;
+    stroke: #111;
+    stroke-width: 2;
+}
+
+/* Buttons */
+
+.buttons {
+    margin-top: 10px;
+}
+
+button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 5px;
+    color: white;
+    background: #e97211;
+}
+
+button:hover {
+    background: #5a189a;
+}
+
+.clear {
+    background: #e63946;
+}
+
+.clear:hover {
+    background: #b91c2b;
+}
+
+/* Flowers */
+
+.flowers {
+    font-size: 35px;
+    margin-top: 5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>🦋 Butterfly Colouring 🦋</h1>
+
+<p class="subtitle">
+    Choose a colour and click each part of the butterfly!
+</p>
+
+<!-- Colour palette -->
+
+<div class="palette">
+
+    <h2>🎨 Colour Palette</h2>
+
+    <div class="colors">
+
+        <div class="color pink"
+             onclick="selectColor('#ff4fa3')"></div>
+
+        <div class="color red"
+             onclick="selectColor('#ff3333')"></div>
+
+        <div class="color orange"
+             onclick="selectColor('#ff8c00')"></div>
+
+        <div class="color yellow"
+             onclick="selectColor('#ffd900')"></div>
+
+        <div class="color green"
+             onclick="selectColor('#36b84a')"></div>
+
+        <div class="color lightgreen"
+             onclick="selectColor('#8bc34a')"></div>
+
+        <div class="color blue"
+             onclick="selectColor('#2196f3')"></div>
+
+        <div class="color skyblue"
+             onclick="selectColor('#00bcd4')"></div>
+
+        <div class="color purple"
+             onclick="selectColor('#9c27b0')"></div>
+
+        <div class="color violet"
+             onclick="selectColor('#673ab7')"></div>
+
+        <div class="color darkblue"
+             onclick="selectColor('#303f9f')"></div>
+
+        <div class="color brown"
+             onclick="selectColor('#8b4513')"></div>
+
+        <div class="color black"
+             onclick="selectColor('#222222')"></div>
+
+        <div class="color white"
+             onclick="selectColor('#ffffff')"></div>
+
+        <div class="color gold"
+             onclick="selectColor('#d4af37')"></div>
+
+    </div>
+
+    <div class="selected">
+        Selected Colour:
+        <span id="colourName">Pink</span>
+    </div>
+
+</div>
+
+
+<!-- Butterfly -->
+
+<div class="canvas">
+
+<svg viewBox="0 0 800 650">
+
+    <!-- LEFT TOP WING -->
+
+    <path class="part"
+        d="M385 250
+           C330 120 160 50 80 130
+           C20 190 75 300 210 300
+           C270 300 330 275 385 250 Z"/>
+
+    <!-- LEFT TOP INNER -->
+
+    <path class="part"
+        d="M350 245
+           C300 165 190 105 125 145
+           C80 175 120 235 195 250
+           C250 260 305 255 350 245 Z"/>
+
+    <!-- LEFT TOP CIRCLE -->
+
+    <circle class="part"
+        cx="170"
+        cy="170"
+        r="45"/>
+
+    <!-- LEFT TOP SMALL CIRCLE -->
+
+    <circle class="part"
+        cx="270"
+        cy="190"
+        r="28"/>
+
+
+    <!-- RIGHT TOP WING -->
+
+    <path class="part"
+        d="M415 250
+           C470 120 640 50 720 130
+           C780 190 725 300 590 300
+           C530 300 470 275 415 250 Z"/>
+
+    <!-- RIGHT TOP INNER -->
+
+    <path class="part"
+        d="M450 245
+           C500 165 610 105 675 145
+           C720 175 680 235 605 250
+           C550 260 495 255 450 245 Z"/>
+
+    <!-- RIGHT TOP CIRCLE -->
+
+    <circle class="part"
+        cx="630"
+        cy="170"
+        r="45"/>
+
+    <!-- RIGHT TOP SMALL CIRCLE -->
+
+    <circle class="part"
+        cx="530"
+        cy="190"
+        r="28"/>
+
+
+    <!-- LEFT BOTTOM WING -->
+
+    <path class="part"
+        d="M385 275
+           C300 285 150 300 110 390
+           C80 455 170 500 250 450
+           C315 410 350 350 385 275 Z"/>
+
+    <!-- LEFT BOTTOM INNER -->
+
+    <path class="part"
+        d="M350 310
+           C285 330 200 355 180 405
+           C165 440 220 445 265 410
+           C305 380 335 340 350 310 Z"/>
+
+    <!-- LEFT BOTTOM CIRCLE -->
+
+    <circle class="part"
+        cx="205"
+        cy="395"
+        r="38"/>
+
+
+    <!-- RIGHT BOTTOM WING -->
+
+    <path class="part"
+        d="M415 275
+           C500 285 650 300 690 390
+           C720 455 630 500 550 450
+           C485 410 450 350 415 275 Z"/>
+
+    <!-- RIGHT BOTTOM INNER -->
+
+    <path class="part"
+        d="M450 310
+           C515 330 600 355 620 405
+           C635 440 580 445 535 410
+           C495 380 465 340 450 310 Z"/>
+
+    <!-- RIGHT BOTTOM CIRCLE -->
+
+    <circle class="part"
+        cx="595"
+        cy="395"
+        r="38"/>
+
+
+    <!-- BODY -->
+
+    <ellipse class="body"
+        cx="400"
+        cy="350"
+        rx="27"
+        ry="120"/>
+
+    <!-- HEAD -->
+
+    <circle class="body"
+        cx="400"
+        cy="220"
+        r="35"/>
+
+    <!-- EYES -->
+
+    <circle class="eye"
+        cx="387"
+        cy="212"
+        r="8"/>
+
+    <circle class="eye"
+        cx="413"
+        cy="212"
+        r="8"/>
+
+
+    <!-- ANTENNA -->
+
+    <path d="M385 195
+             C350 130 315 125 290 105"
+          fill="none"
+          stroke="#222"
+          stroke-width="5"/>
+
+    <path d="M415 195
+             C450 130 485 125 510 105"
+          fill="none"
+          stroke="#222"
+          stroke-width="5"/>
+
+    <circle cx="288" cy="103" r="8" fill="#222"/>
+    <circle cx="512" cy="103" r="8" fill="#222"/>
+
+
+    <!-- BODY STRIPES -->
+
+    <line x1="380" y1="285"
+          x2="420" y2="285"
+          stroke="white"
+          stroke-width="5"/>
+
+    <line x1="378" y1="315"
+          x2="422" y2="315"
+          stroke="white"
+          stroke-width="5"/>
+
+    <line x1="378" y1="345"
+          x2="422" y2="345"
+          stroke="white"
+          stroke-width="5"/>
+
+    <line x1="380" y1="375"
+          x2="420" y2="375"
+          stroke="white"
+          stroke-width="5"/>
+
+    <line x1="383" y1="405"
+          x2="417" y2="405"
+          stroke="white"
+          stroke-width="5"/>
+
+</svg>
+
+</div>
+
+
+<!-- Buttons -->
+
+<div class="buttons">
+
+    <button onclick="randomColour()">
+        🌈 Random Colours
+    </button>
+
+    <button class="clear" onclick="resetButterfly()">
+        🧹 Reset
+    </button>
+
+</div>
+
+<div class="flowers">
+    🌸 🌼 🌷 🌻 🌺 🌸
+</div>
+
+
+<script>
+
+let selectedColor = "#ff4fa3";
+
+const colours = [
+    "#ff4fa3",
+    "#ff3333",
+    "#ff8c00",
+    "#ffd900",
+    "#36b84a",
+    "#8bc34a",
+    "#2196f3",
+    "#00bcd4",
+    "#9c27b0",
+    "#673ab7",
+    "#303f9f",
+    "#8b4513",
+    "#222222",
+    "#ffffff",
+    "#d4af37"
+];
+
+const parts = document.querySelectorAll(".part");
+
+
+// Select colour
+
+function selectColor(color) {
+
+    selectedColor = color;
+
+    document.getElementById("colourName").innerText = color;
+
+}
+
+
+// Colour butterfly part
+
+parts.forEach(function(part) {
+
+    part.addEventListener("click", function() {
+
+        part.style.fill = selectedColor;
+
+    });
+
+});
+
+
+// Random colouring
+
+function randomColour() {
+
+    parts.forEach(function(part) {
+
+        let random =
+            colours[Math.floor(Math.random() * colours.length)];
+
+        part.style.fill = random;
+
+    });
+
+}
+
+
+// Reset
+
+function resetButterfly() {
+
+    parts.forEach(function(part) {
+
+        part.style.fill = "white";
+
+    });
+
+    selectedColor = "#ff4fa3";
+
+    document.getElementById("colourName").innerText = "Pink";
+
+}
+
+</script>
+
+</body>
+</html>
